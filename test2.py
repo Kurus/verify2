@@ -39,6 +39,8 @@ for d in range(0,dep):
             lis = in_ori[z,y,d].flatten().tolist()
             f_in_c.write(str(lis)[1:-1]+'\n')
             f_in_c_b.write(bytearray(lis))
+if stride2_en==1:
+    in_l=in_ori
 ########################        expand kernels 
 ker_l_1 =np.zeros(ker*dep, dtype='uint8').reshape((ker,dep))
 # ker_l_1 =np.random.randint(100,size=ker*dep, dtype='uint8').reshape((ker,dep))
@@ -125,13 +127,16 @@ if stride2_en==0:
             res = np.bitwise_and(res, 0xff)
             out_3[k,l,:,:]=res
 if stride2_en==1:
-    o_dim=(dim_p-3)//2 + 1
+    if dim%2==0:
+        o_dim = dim//2 - 1
+    else:
+        o_dim= dim //2
     out_3 = np.zeros(ker*dep*o_dim*o_dim, dtype='uint8').reshape((ker,dep,o_dim,o_dim))
     for k in range(0,ker):
         for l in range(0,dep):
             kk = ker_l_3[k,l]
-            for a in range(0,dim,2):
-                for b in range(0,dim,2):
+            for a in range(0,dim-2,2):
+                for b in range(0,dim-2,2):
                     ll = in_l[a:a+3,b:b+3,l].flatten()
                     out_3[k,l,a//2,b//2]=sum(np.multiply(kk,ll))
     dim=o_dim
