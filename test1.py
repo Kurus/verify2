@@ -1,10 +1,10 @@
 import numpy as np
 from scipy import signal as sg
-dim = 56
+dim = 12
 dim_p=dim + 2
-dep = 16
+dep = 32
 ker = 64
-sq_ker = 16
+sq_ker = 64
 pool_en = 0
 av_pool_en = 0
 random = 1 #TODO
