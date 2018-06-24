@@ -23,7 +23,6 @@ if random == 0:
 else:
     in_ori = np.random.randint(low = 0, high = 255, size = (dim,dim,dep), dtype='uint8')
 in_l[1:-1,1:-1,:] = in_ori
-print("input layer");print(in_l[:,:,0]);
 f_in = open("input_layer.txt","w")
 f_in_b = open("input_layer.bin","wb")
 for z in range(0,dim):
@@ -44,6 +43,7 @@ for d in range(0,dep):
             f_in_c_b.write(bytearray(lis))
 if stride2_en==1:
     in_l=in_ori
+print("input layer");print(in_l[:,:,0]);
 ########################        expand kernels 
 ker_l_1 =np.zeros(ker*dep, dtype='uint8').reshape((ker,dep))
 ker_l_1[0,0]=1
