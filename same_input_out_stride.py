@@ -6,7 +6,7 @@ dim_p=dim + 2
 dep = 64
 ker = 64
 sq_ker = 64
-pool_en = 0
+pool_en = 1
 av_pool_en = 0
 stride2_en = 1
 random = 0 #TODO
@@ -277,6 +277,12 @@ else:
     # sq_ker_l = np.ones(sq_ker*dep, dtype='uint8').reshape((sq_ker,dep))
     sq_ker_l = np.random.randint(low = 0, high = 255, size = (sq_ker,dep), dtype='uint8')
 
+if stride2_en==1:
+    tmp = np.full(sq_ker*dep,0, dtype='uint8').reshape((sq_ker,dep))
+    sq_ker_l_write = np.append(sq_ker_l,tmp,axis=1)
+else:
+    sq_ker_l_write = sq_ker_l
+
 sq_k_1 = open("sq_ker.txt","w")
 sq_k_1_b = open("sq_ker.bin","wb")
 print("squeeze kernel")
@@ -289,11 +295,11 @@ if(sq_rep == 1):
 for r in range(0,rep_no):
     for x in range(0,sq_ker):
         for z in range(0,dep_h,8):
-            lis = sq_ker_l[x,z+dep_h:z+dep_h+8][::-1]#kerle of 3x3 part # reverse added
+            lis = sq_ker_l_write[x,z+dep_h:z+dep_h+8][::-1]#kerle of 3x3 part # reverse added
             sq_k_1.write(str(lis)[1:-1]+'\n')
             sq_k_1_b.write(bytearray(lis))
 
-            lis = sq_ker_l[x,z:z+8][::-1] #reverse added
+            lis = sq_ker_l_write[x,z:z+8][::-1] #reverse added
             sq_k_1.write(str(lis)[1:-1]+'\n')
             sq_k_1_b.write(bytearray(lis))
     
