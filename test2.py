@@ -1,7 +1,8 @@
 # support stride 2
 import numpy as np
 from scipy import signal as sg
-dim = 12
+
+dim = 56
 dim_p=dim + 2
 dep = 64
 ker = 64
@@ -15,11 +16,8 @@ sq_rep = 0 # repete squze kernl for last layer
 #######################         Input image
 in_l = np.zeros(dim_p*dim_p*dep, dtype='uint8').reshape((dim_p,dim_p,dep))
 if random == 0:
-    in_ori = np.full(dim*dim*dep, 0, dtype='uint8').reshape((dim,dim,dep))
-    in_ori[:,:,0] = np.arange(dim*dim, dtype = 'uint8').reshape(dim,dim)
+    in_ori = np.full(dim*dim*dep, 1, dtype='uint8').reshape((dim,dim,dep))
     # in_ori = np.arange(dim*dim*dep, dtype='uint8').reshape((dim,dim,dep))
-    # in_ori = np.random.randint(low = 0, high = 255, size = (dim,dim,dep), dtype='uint8')
-    in_ori = in_ori%128
 else:
     in_ori = np.random.randint(low = 0, high = 255, size = (dim,dim,dep), dtype='uint8')
 in_l[1:-1,1:-1,:] = in_ori
@@ -46,7 +44,6 @@ if stride2_en==1:
     in_l=in_ori
 ########################        expand kernels 
 ker_l_1 =np.zeros(ker*dep, dtype='uint8').reshape((ker,dep))
-ker_l_1[0,0]=1
 # ker_l_1 =np.random.randint(100,size=ker*dep, dtype='uint8').reshape((ker,dep))
 print("kernel1");print(ker_l_1)
 f_k_1 = open("ker_1x1.txt","w")
@@ -86,10 +83,10 @@ for z in range(0,dep):
         f_k_3.write(str(nin)[1:-1]+'\n')
 
 ########################        exapnd bias
-bis_1 = np.zeros(ker,dtype='uint8')
-#bis_1 = np.full(ker,1,dtype='uint8')
+# bis_1 = np.arange(ker,dtype='uint8')
+bis_1 = np.full(ker,0,dtype='uint8')
 # bis_1 = np.random.randint(low = 0, high = 255, size=ker,dtype='uint8')
-bis_3 = np.full(ker,0,dtype='uint8')
+bis_3 = np.full(ker,1,dtype='uint8')
 # bis_3 = np.random.randint(low = 0, high = 255, size=ker,dtype='uint8')
 b_bis = open("bias.txt","w")
 b_bis_b = open("bias.bin","wb")
@@ -201,6 +198,7 @@ print("exp1 after bias sinle pix")
 print(out_1[:,0,0])
 print("exp1 after bias single layer")
 print(out_1[0,:,:])
+
 print("exp3 after bias sinle pix")
 print(out_3[:,0,0])
 print("exp3 after bias single layer")
