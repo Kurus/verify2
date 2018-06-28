@@ -16,7 +16,8 @@ sq_rep = 0 # repete squze kernl for last layer
 #######################         Input image
 in_l = np.zeros(dim_p*dim_p*dep, dtype='uint8').reshape((dim_p,dim_p,dep))
 if random == 0:
-    in_ori = np.full(dim*dim*dep, 1, dtype='uint8').reshape((dim,dim,dep))
+    in_ori = np.full(dim*dim*dep, 0, dtype='uint8').reshape((dim,dim,dep))
+    in_ori[:,:,0] = np.arange(dim*dim, dtype = 'uint8').reshape(dim,dim)
     # in_ori = np.arange(dim*dim*dep, dtype='uint8').reshape((dim,dim,dep))
 else:
     in_ori = np.random.randint(low = 0, high = 255, size = (dim,dim,dep), dtype='uint8')
@@ -44,6 +45,7 @@ if stride2_en==1:
     in_l=in_ori
 ########################        expand kernels 
 ker_l_1 =np.zeros(ker*dep, dtype='uint8').reshape((ker,dep))
+ker_l_1[0,0]=1
 # ker_l_1 =np.random.randint(100,size=ker*dep, dtype='uint8').reshape((ker,dep))
 print("kernel1");print(ker_l_1)
 f_k_1 = open("ker_1x1.txt","w")

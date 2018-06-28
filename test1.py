@@ -1,10 +1,10 @@
 import numpy as np
 from scipy import signal as sg
-dim = 12
+dim = 56
 dim_p=dim + 2
-dep = 32
+dep = 16
 ker = 64
-sq_ker = 64
+sq_ker = 16
 pool_en = 0
 av_pool_en = 0
 random = 1 #TODO
@@ -27,7 +27,7 @@ for z in range(0,dim):
             for rep in range(0,ker,4):
                 f_in.write(str(lis)[1:-1]+'\n')
                 f_in_b.write(bytearray(lis))
-
+exit()
 f_in_c = open("input_layer_c.txt","w")
 f_in_c_b = open("input_layer_c.bin","wb")
 for d in range(0,dep):
