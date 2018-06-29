@@ -11,7 +11,7 @@ ker_list = [16,16]
 sq_ker_list = [16,16]
 pool_en_list = [0,0]
 av_pool_en_list = [0,0]
-stride2_en_list = [0,0]
+stride2_en_list = [1,0]
 sq_rep_list = [0,0] # repete squze kernl for last layer
 random = 0 #TODO
 num_layer = 1
@@ -81,9 +81,11 @@ for cur_ly in range(0,num_layer):
     if stride2_en==1:
         in_l=in_ori
     ########################        expand kernels 
-    ker_l_1 =np.zeros(ker*dep, dtype='uint8').reshape((ker,dep))
-    ker_l_1[0,0]=1
-    # ker_l_1 =np.random.randint(100,size=ker*dep, dtype='uint8').reshape((ker,dep))
+    # ker_l_1 =np.zeros(ker*dep, dtype='uint8').reshape((ker,dep))
+    # ker_l_1[0,0]=1
+    ker_l_1 =np.random.randint(100,size=ker*dep, dtype='uint8').reshape((ker,dep))
+    if stride2_en == 1:# for stride 2 exp 1 is zero
+        ker_l_1 = np.zeros(ker*dep, dtype='uint8').reshape((ker,dep))
     print("kernel1");print(ker_l_1)
     f_k_1 = open("ker_1x1.txt","w")
     f_k_1_b = open("ker_1x1.bin","wb")
@@ -102,9 +104,9 @@ for cur_ly in range(0,num_layer):
             f_k_1.write(str(lis)[1:-1]+'\n')
 
     # ker_l_3 = np.asarray(list(range(0,9))*ker*dep, dtype='uint8').reshape((ker,dep,9))
-    ker_l_3 = np.full(ker*dep*9, 0, dtype='uint8').reshape((ker,dep,9))
+    # ker_l_3 = np.full(ker*dep*9, 0, dtype='uint8').reshape((ker,dep,9))
     # ker_l_3 = np.ones(ker*dep*9, dtype='uint8').reshape((ker,dep,9))
-    # ker_l_3 = np.random.randint(100,size=ker*dep*9, dtype='uint8').reshape((ker,dep,9))
+    ker_l_3 = np.random.randint(100,size=ker*dep*9, dtype='uint8').reshape((ker,dep,9))
     print("kernel3");print(ker_l_3[0:8,0,:]);
     f_k_3 = open("ker_3x3.txt","w")
     f_k_3_b = open("ker_3x3.bin","wb")
@@ -125,6 +127,8 @@ for cur_ly in range(0,num_layer):
     # bis_1 = np.arange(ker,dtype='uint8')
     bis_1 = np.full(ker,0,dtype='uint8')
     # bis_1 = np.random.randint(low = 0, high = 255, size=ker,dtype='uint8')
+    if stride2_en == 1: # for stride 2 expand 1 is disabled
+        bis_1 = np.full(ker,0,dtype='uint8')
     bis_3 = np.full(ker,1,dtype='uint8')
     # bis_3 = np.random.randint(low = 0, high = 255, size=ker,dtype='uint8')
     b_bis = open("bias.txt","w")
@@ -157,7 +161,6 @@ for cur_ly in range(0,num_layer):
                 lis = out_1[:,d,r,c]
                 f_out_1_b.write(bytearray(lis))
                 f_out_1.write(str(lis)[1:-1]+'\n')
-
 
     if stride2_en==0:
         out_3 = np.zeros(ker*dep*dim*dim, dtype='uint8').reshape((ker,dep,dim,dim))
