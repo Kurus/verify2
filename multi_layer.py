@@ -57,12 +57,22 @@ for cur_ly in range(0,num_layer):
                     f_in.write(str(lis)[1:-1]+'\n')
                     f_in_b.write(bytearray(lis))
 
+    in_ori_c = [] # for first layer in hardware it need to be mod 4
+    if cur_ly == 0:
+        if dim%4 ==0:
+            dim_c = dim
+        else:
+            dim_c = ((dim//4) + 1)*4
+        in_ori_c = np.full(dim_c*dim_c*dep, 0, dtype='uint8').reshape((dim_c,dim_c,dep))
+        in_ori_c[0:dim,0:dim,dep] = in_ori
+    else: 
+        in_ori_c = in_ori
     f_in_c = open("input_layer_c.txt","w")
     f_in_c_b = open("input_layer_c.bin","wb")
     for d in range(0,dep):
         for z in range(0,dim):
             for y in range(0,dim):
-                lis = in_ori[z,y,d].flatten().tolist()
+                lis = in_ori_c[z,y,d].flatten().tolist()
                 f_in_c.write(str(lis)[1:-1]+'\n')
                 f_in_c_b.write(bytearray(lis))
     if stride2_en==1:
