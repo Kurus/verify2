@@ -4,7 +4,7 @@ import numpy as np
 from scipy import signal as sg
 import os
 
-dim = 7
+dim = 4
 dim_p=dim + 2
 dep = 4
 ker_list = [16,16]
@@ -14,7 +14,7 @@ av_pool_en_list = [0,0]
 stride2_en_list = [0,0]
 sq_rep_list = [0,0] # repete squze kernl for last layer
 random = 0 #TODO
-num_layer = 2
+num_layer = 1
 
 
 final_out = []
@@ -36,7 +36,7 @@ for cur_ly in range(0,num_layer):
         if random == 0:
             in_ori = np.full(dim*dim*dep, 0, dtype='uint8').reshape((dim,dim,dep))
             in_ori[:,:,0] = np.arange(dim*dim, dtype = 'uint8').reshape(dim,dim)
-            # in_ori = np.arange(dim*dim*dep, dtype='uint8').reshape((dim,dim,dep))
+            in_ori = np.arange(dim*dim*dep, dtype='uint8').reshape((dim,dim,dep))
         else:
             in_ori = np.random.randint(low = 0, high = 255, size = (dim,dim,dep), dtype='uint8')
     else:
@@ -58,20 +58,23 @@ for cur_ly in range(0,num_layer):
                     f_in_b.write(bytearray(lis))
 
     in_ori_c = [] # for first layer in hardware it need to be mod 4
+    dim_c = dim
     if cur_ly == 0:
         if dim%4 ==0:
             dim_c = dim
         else:
             dim_c = ((dim//4) + 1)*4
         in_ori_c = np.full(dim_c*dim_c*dep, 0, dtype='uint8').reshape((dim_c,dim_c,dep))
-        in_ori_c[0:dim,0:dim,dep] = in_ori
+        print(in_ori_c.shape)
+        print(in_ori.shape)
+        in_ori_c[0:dim,0:dim,:] = in_ori
     else: 
         in_ori_c = in_ori
     f_in_c = open("input_layer_c.txt","w")
     f_in_c_b = open("input_layer_c.bin","wb")
     for d in range(0,dep):
-        for z in range(0,dim):
-            for y in range(0,dim):
+        for z in range(0,dim_c):
+            for y in range(0,dim_c):
                 lis = in_ori_c[z,y,d].flatten().tolist()
                 f_in_c.write(str(lis)[1:-1]+'\n')
                 f_in_c_b.write(bytearray(lis))
