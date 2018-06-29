@@ -4,16 +4,16 @@ import numpy as np
 from scipy import signal as sg
 import os
 
-dim = 3
+dim = 7
 dim_p=dim + 2
 dep = 4
 ker_list = [16,16]
 sq_ker_list = [16,16]
 pool_en_list = [0,0]
-av_pool_en = 0
-stride2_en = 0
+av_pool_en_list = [0,0]
+stride2_en_list = [0,0]
+sq_rep_list = [0,0] # repete squze kernl for last layer
 random = 0 #TODO
-sq_rep = 0 # repete squze kernl for last layer
 num_layer = 2
 
 
@@ -28,6 +28,9 @@ for cur_ly in range(0,num_layer):
     ker = ker_list[cur_ly]
     sq_ker = sq_ker_list[cur_ly]
     pool_en = pool_en_list[cur_ly]
+    av_pool_en = av_pool_en_list[cur_ly]
+    stride2_en = stride2_en_list[cur_ly]
+    sq_rep = sq_rep_list[cur_ly]
     if cur_ly == 0:
         #######################         Input image
         if random == 0:
