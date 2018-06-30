@@ -315,7 +315,10 @@ for cur_ly in range(0,num_layer):
     else:
         # sq_ker_l = np.ones(sq_ker*dep, dtype='uint8').reshape((sq_ker,dep))
         sq_ker_l = np.random.randint(low = 0, high = 255, size = (sq_ker,dep), dtype='uint8')
-
+    if stride2_en==1:
+        tmp = np.full(sq_ker*dep,0, dtype='uint8').reshape((sq_ker,dep))
+        sq_ker_l_write = np.append(sq_ker_l,tmp,axis=1)
+    else:
     sq_k_1 = open("sq_ker.txt","w")
     sq_k_1_b = open("sq_ker.bin","wb")
     print("squeeze kernel")

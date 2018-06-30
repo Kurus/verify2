@@ -41,13 +41,16 @@ for d in range(0,dep):
             lis = in_ori[z,y,d].flatten().tolist()
             f_in_c.write(str(lis)[1:-1]+'\n')
             f_in_c_b.write(bytearray(lis))
-if stride2_en==1:
+if stride2_en==1: #valid padding
     in_l=in_ori
 print("input layer");print(in_l[:,:,0]);
 ########################        expand kernels 
 ker_l_1 =np.zeros(ker*dep, dtype='uint8').reshape((ker,dep))
 ker_l_1[0,0]=1
 # ker_l_1 =np.random.randint(100,size=ker*dep, dtype='uint8').reshape((ker,dep))
+if stride2_en == 1:# for stride 2 exp 1 is zero
+    ker_l_1 = np.zeros(ker*dep, dtype='uint8').reshape((ker,dep))
+
 print("kernel1");print(ker_l_1)
 f_k_1 = open("ker_1x1.txt","w")
 f_k_1_b = open("ker_1x1.bin","wb")
@@ -90,6 +93,8 @@ for z in range(0,dep):
 bis_1 = np.zeros(ker,dtype='uint8')
 #bis_1 = np.full(ker,1,dtype='uint8')
 # bis_1 = np.random.randint(low = 0, high = 255, size=ker,dtype='uint8')
+if stride2_en == 1: # for stride 2 expand 1 is disabled
+    bis_1 = np.full(ker,0,dtype='uint8')
 bis_3 = np.full(ker,0,dtype='uint8')
 # bis_3 = np.random.randint(low = 0, high = 255, size=ker,dtype='uint8')
 b_bis = open("bias.txt","w")
